@@ -1,0 +1,575 @@
+/* =========================================
+   RESET + TOKENS
+========================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body,
+#app {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #f5f5f5;
+  color: #222;
+}
+
+/* -------- Tema claro (terroso) -------- */
+:root {
+  --bg: #f6f1e7;
+  --surface: #fffdf8;
+  --surface-2: #f2eadf;
+  --text: #2a231c;
+  --text-muted: #6e5f53;
+  --border: #e2d7c9;
+  --border-strong: #d6cab9;
+
+  --brand: #c0603a;
+  --brand-700: #9f4d2e;
+  --accent-olive: #7a8b45;
+  --accent-sage: #9fb28a;
+
+  --info: #3a6c8f;
+  --warn: #b0812a;
+  --danger: #8e2f2f;
+  --success: #5e8a55;
+  --focus: #c1922e;
+
+  --sidebar-w: 240px;
+  --content-max: 960px;
+
+  --radius: 10px;
+  --shadow: 0 1px 6px rgba(42, 35, 28, 0.08);
+
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+
+  /* controle do respiro acima dos cards */
+  --page-gap-top: var(--space-4);
+}
+
+/* -------- Tema escuro -------- */
+:root[data-theme="dark"] {
+  --bg: #151310;
+  --surface: #1e1a16;
+  --surface-2: #231f1b;
+  --text: #ede6dd;
+  --text-muted: #bbafa3;
+  --border: #3a322b;
+  --border-strong: #4a4037;
+
+  --brand: #cc6b45;
+  --brand-700: #a35335;
+  --accent-olive: #8fa15a;
+  --accent-sage: #afc3a0;
+
+  --info: #5a86a6;
+  --warn: #c4973a;
+  --danger: #b45151;
+  --success: #769e6e;
+  --focus: #d1a43b;
+
+  --shadow: 0 1px 10px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================================
+   BASE (mapa das cores)
+========================================= */
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+a:focus,
+button:focus,
+.input:focus {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* =========================================
+   LAYOUT: GRID + SIDEBAR
+========================================= */
+.app-root {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Sidebar fixa/sticky */
+.sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Área principal centralizada */
+.content {
+  margin: 0;
+  padding: var(--space-3);
+  display: flex;
+  justify-content: center;
+}
+.content > .page {
+  width: 100%;
+  max-width: var(--content-max);
+  /* respiro acima dos cards e espaçamento vertical entre seções */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--page-gap-top);
+}
+/* fallback: se alguém esquecer de usar .page */
+.content > :first-child:not(.page) {
+  margin-top: var(--page-gap-top);
+}
+
+/* =========================================
+   BRAND + NAV
+========================================= */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--brand);
+  text-decoration: none;
+}
+.brand:hover {
+  opacity: 0.9;
+}
+.brand-icon {
+  color: var(--brand);
+}
+.brand-text {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.2px;
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+.nav-item {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-item:hover {
+  background: color-mix(in oklab, var(--surface) 70%, var(--text) 5%);
+}
+.router-link-active.nav-item,
+.router-link-exact-active.nav-item {
+  background: var(--brand);
+  color: #fff;
+}
+
+/* =========================================
+   SEÇÕES, CARDS, GRID
+========================================= */
+.section {
+  /* espaçamento adicional por seção se precisar */
+}
+.grid {
+  display: grid;
+  gap: var(--space-3);
+}
+.grid-2 {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow);
+}
+.card > h2 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+}
+
+/* Header interno de card */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.card-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: 0.2px;
+}
+
+/* =========================================
+   FORM, INPUTS, BOTÕES
+========================================= */
+.input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  background: color-mix(in oklab, var(--surface) 92%, #fff 8%);
+  color: var(--text);
+}
+.input-sm {
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+.btn:hover {
+  background: var(--brand-700);
+  border-color: var(--brand-700);
+}
+.btn-outline {
+  background: var(--surface);
+  color: var(--brand);
+  border-color: var(--brand);
+}
+.btn-outline:hover {
+  background: color-mix(in oklab, var(--surface) 85%, var(--brand) 10%);
+}
+.btn-danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+.btn-danger:hover {
+  filter: brightness(1.05);
+}
+.btn-sm {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--brand);
+  border-color: transparent;
+}
+.btn-ghost:hover {
+  background: color-mix(in oklab, var(--surface) 85%, var(--brand) 10%);
+  border-color: var(--brand);
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: none;
+}
+
+/* =========================================
+   TABELA (polida + responsiva)
+========================================= */
+.table-wrap {
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  overflow: auto;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+}
+.table thead th {
+  background: var(--surface-2);
+  color: var(--text);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border-strong);
+  white-space: nowrap;
+}
+.table tbody td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.table tbody tr:nth-child(even) td {
+  background: color-mix(in oklab, var(--surface) 94%, var(--text) 6%);
+}
+.table tbody tr:hover td {
+  background: color-mix(in oklab, var(--surface) 88%, var(--brand) 6%);
+}
+
+.th-center,
+.td-center {
+  text-align: center;
+}
+.th-right,
+.td-right {
+  text-align: right;
+}
+.cell-title {
+  max-width: 520px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cell-sub {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.chip {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;
+  border: 1px solid var(--border-strong);
+  background: color-mix(in oklab, var(--surface) 90%, var(--brand) 4%);
+  color: var(--text);
+}
+.chip-muted {
+  background: color-mix(in oklab, var(--surface) 94%, var(--text) 4%);
+}
+
+.table-actions {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+.table-actions .btn {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.table-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 28px;
+  font-size: 14px;
+}
+
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* =========================================
+   GRÁFICOS
+========================================= */
+.chart {
+  height: clamp(220px, 40vh, 360px);
+}
+.chart canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* =========================================
+   COLLAPSE
+========================================= */
+.collapse {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 180ms ease;
+  background: transparent;
+}
+.collapse.open {
+  max-height: 160px;
+}
+
+/* =========================================
+   RESPONSIVO (layout + tabela-cartão)
+========================================= */
+@media (max-width: 1024px) {
+  :root {
+    --content-max: 860px;
+  }
+}
+@media (max-width: 768px) {
+  :root {
+    --sidebar-w: 100%;
+    --page-gap-top: var(--space-3);
+  } /* sidebar vira topbar; respiro menor */
+  .app-root {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .sidebar {
+    position: relative;
+    height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .side-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .nav-item {
+    padding: 8px 10px;
+  }
+  .content {
+    padding: var(--space-2);
+  }
+}
+@media (max-width: 480px) {
+  :root {
+    --content-max: 100%;
+  }
+  .card {
+    padding: 12px;
+    border-radius: 8px;
+  }
+  .btn,
+  .btn-outline,
+  .btn-danger {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  .input {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}
+
+/* Tabela em cartões no mobile */
+@media (max-width: 640px) {
+  .table-wrap {
+    overflow: hidden;
+  }
+  .table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+  }
+  .table thead {
+    display: none;
+  }
+  .table tbody tr {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 8px 10px;
+    box-shadow: var(--shadow);
+  }
+  .table tbody td {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 8px;
+    border: 0;
+    padding: 8px 6px;
+  }
+  .table tbody td::before {
+    content: attr(data-label);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .td-center,
+  .td-right {
+    text-align: left;
+  }
+  .table-actions {
+    justify-content: flex-start;
+  }
+  .cell-title {
+    max-width: 100%;
+  }
+  .table-empty {
+    padding: 20px;
+  }
+  .table-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .pagination {
+    justify-content: center;
+  }
+}
+
+/* =========================================
+   ACABAMENTO
+========================================= */
+.muted {
+  color: var(--text-muted);
+}
+.h1 {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+}
+.h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.btn,
+.nav-item,
+.chip,
+.input,
+.card,
+.table tbody tr td {
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+:where(a, button, .input):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
